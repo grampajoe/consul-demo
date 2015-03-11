@@ -1,0 +1,10 @@
+{
+  "name": "web",
+  "port": 8080,
+  "checks": [
+    {
+      "http": "http://web:8080/",
+      "interval": "10s"
+    }
+  ]
+}

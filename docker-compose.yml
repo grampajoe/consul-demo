@@ -1,0 +1,72 @@
+# Web server cluster
+
+web1:
+  build: .
+  hostname: web1
+  ports:
+    - 8080:8080
+agent1:
+  image: 'progrium/consul:latest'
+  command: -join consul
+  hostname: agent1
+  ports:
+    - 8200:8500
+  links:
+    - consul1:consul
+    - web1:web
+
+
+web2:
+  build: .
+  hostname: web2
+  ports:
+    - 8081:8080
+agent2:
+  image: 'progrium/consul:latest'
+  command: -join consul
+  hostname: agent2
+  ports:
+    - 8201:8500
+  links:
+    - consul1:consul
+    - web2:web
+
+web3:
+  build: .
+  hostname: web3
+  ports:
+    - 8082:8080
+agent3:
+  image: 'progrium/consul:latest'
+  command: -join consul
+  hostname: agent3
+  ports:
+    - 8202:8500
+  links:
+    - consul1:consul
+    - web3:web
+
+
+# Consul server cluster
+
+consul1:
+  image: 'progrium/consul:latest'
+  command: -server -bootstrap -ui-dir /ui
+  hostname: consul1
+  ports:
+    - 8500:8500
+    - 8600:53/udp
+
+consul2:
+  image: 'progrium/consul:latest'
+  command: -server -join consul
+  hostname: consul2
+  links:
+    - consul1:consul
+
+consul3:
+  image: 'progrium/consul:latest'
+  command: -server -join consul
+  hostname: consul3
+  links:
+    - consul1:consul
